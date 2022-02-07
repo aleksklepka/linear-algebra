@@ -3,6 +3,8 @@
 #include <math.h>
 #include <string.h>
 
+#define MATRIX_MENU_EXIT_CODE 4
+
 typedef struct _matrix { //node
 	unsigned rows;
 	unsigned cols;
@@ -19,6 +21,7 @@ typedef struct _matrixList {
 void mainMenu(void);
 void printMenu(void);
 void matrixMenu(void);
+void printMatrixMenu(void);
 matrix createMatrix(void);
 int readOptions(void);
 //void addMatrix2List(void);
@@ -31,26 +34,39 @@ int main(void) {
 void mainMenu() {
 	system("cls");
 	printMenu();
-	switch (readOptions()) {
-	case 1:
-		printf("This chapter is too complex! Come back later!");
-		break;
-	case 9:
-		matrixMenu();
-		break;
-	default:
-		printf("No such option exists!");
-		break;
+	int userChoice = readOptions();
+	while(userChoice != 10){
+        switch (userChoice) {
+        case 1:
+            printf("This chapter is too complex! Come back later!");
+            break;
+        case 9:
+            matrixMenu();
+            break;
+        default:
+            printf("No such option exists!");
+            break;
+        }
+        userChoice = readOptions();
 	}
 	return;
 }
 
 void printMenu(void) {
 	printf("Welcome to the Linear Algebra App!\n");
-	printf("Please choose an option (1-9) to proceed:\n");
+	printf("Please choose an option (1-10) to proceed:\n");
 	printf("1) Complex Numbers\n");
 	printf("9) Matrix\n");
+	printf("10) Exit the program \n");
 	return;
+}
+
+void printMatrixMenu(void) {
+	printf("| Matrix Menu |\n");
+	printf("1) Add Matrix\n");
+	printf("2) Delete Matrix\n");
+	printf("3) Print Matrix Menu\n");
+	printf("4) Return to Main Menu\n");
 }
 
 int readOptions() {
@@ -65,29 +81,34 @@ int readOptions() {
 
 void matrixMenu() {
 	system("cls");
-	printf("| Matrix Menu |\n");
-	printf("1) Add Matrix\n");
-	printf("2) Delete Matrix\n");
-	printf("3) Return to Main Menu\n");
-	switch (readOptions()) {
-		case 1:
-			createMatrix();
-			break;
-		case 2:
-			printf("ERROR!");
-			break;
-		case 3:
-			mainMenu();
-			break;
-		default: // help
-			break;
+	printMatrixMenu();
+	int matrixOption = 0;
+	while(matrixOption != MATRIX_MENU_EXIT_CODE){
+        matrixOption = readOptions();
+        switch (matrixOption) {
+            case 1:
+                createMatrix();
+                break;
+            case 2:
+                printf("ERROR!");
+                break;
+            case 3:
+                printMatrixMenu();
+                break;
+            case 4:
+                printf("Returning to main menu\n\n");
+                printMenu();
+                break;
+            default: // help
+                break;
+        }
 	}
 }
 
 // add matrix - size, values, allocate memory
 // delete matrix - free memory
 // print matrix - for loop
-// print marix list (A-Z, 26 total) 
+// print marix list (A-Z, 26 total)
 // matrix operations
 // return to main menu
 // help
@@ -128,6 +149,7 @@ matrix createMatrix(void) {
 void printMatrix(matrix* m) {
 
 }
+
 
 //void addMatrix2List(matrixList) {
 //	if (matrixList == NULL) {
