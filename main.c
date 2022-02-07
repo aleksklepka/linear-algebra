@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 
-#define MATRIX_MENU_EXIT_CODE 4
+#define MATRIX_MENU_EXIT_CODE 5
 
 typedef struct _matrix { //node
 	unsigned rows;
@@ -23,6 +23,7 @@ void printMenu(void);
 void matrixMenu(void);
 void printMatrixMenu(void);
 matrix createMatrix(void);
+void printMatrix(matrix *m);
 void deleteMatrix(matrix *m);
 int readOptions(void);
 //void addMatrix2List(void);
@@ -67,8 +68,9 @@ void printMatrixMenu(void) {
 	printf("| Matrix Menu |\n");
 	printf("1) Add Matrix\n");
 	printf("2) Delete Matrix\n");
-	printf("3) Print Matrix Menu\n");
-	printf("4) Return to Main Menu\n");
+	printf("3) Print Matrix\n");
+	printf("4) Print Matrix Menu\n");
+	printf("5) Return to Main Menu\n");
 }
 
 int readOptions() {
@@ -98,9 +100,12 @@ void matrixMenu() {
                 printf("Matrix deleted \n");
                 break;
             case 3:
-                printMatrixMenu();
+                printMatrix(&mainMatrix);
                 break;
             case 4:
+                printMatrixMenu();
+                break;
+            case MATRIX_MENU_EXIT_CODE:
                 printf("Returning to main menu\n\n");
                 break;
             default: // help
@@ -151,7 +156,15 @@ matrix createMatrix(void) {
 }
 
 void printMatrix(matrix* m) {
-
+    printf("Matrix name: %s\n", m->name == NULL ? "(Not set)" : m->name);
+    printf("Matrix size: %d X %d\n\n", m->rows, m->cols);
+    int currentPos = 0;
+    while(currentPos < m->rows*m->cols){
+        printf("%5.2lf ", m->arr[currentPos]);
+        if((currentPos+1) % m->rows == 0 && currentPos != 0) printf("\n");
+        currentPos++;
+    }
+    printf("\n");
 }
 
 void deleteMatrix(matrix *m){
