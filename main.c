@@ -23,6 +23,7 @@ void printMenu(void);
 void matrixMenu(void);
 void printMatrixMenu(void);
 matrix createMatrix(void);
+void deleteMatrix(matrix *m);
 int readOptions(void);
 //void addMatrix2List(void);
 
@@ -38,10 +39,11 @@ void mainMenu() {
 	while(userChoice != 10){
         switch (userChoice) {
         case 1:
-            printf("This chapter is too complex! Come back later!");
+            printf("This chapter is too complex! Come back later!\n");
             break;
         case 9:
             matrixMenu();
+            printMenu();
             break;
         default:
             printf("No such option exists!");
@@ -83,21 +85,23 @@ void matrixMenu() {
 	system("cls");
 	printMatrixMenu();
 	int matrixOption = 0;
+	matrix mainMatrix;
 	while(matrixOption != MATRIX_MENU_EXIT_CODE){
         matrixOption = readOptions();
         switch (matrixOption) {
             case 1:
-                createMatrix();
+                mainMatrix = createMatrix();
+                printf("Matrix created successfully \n");
                 break;
             case 2:
-                printf("ERROR!");
+                deleteMatrix(&mainMatrix);
+                printf("Matrix deleted \n");
                 break;
             case 3:
                 printMatrixMenu();
                 break;
             case 4:
                 printf("Returning to main menu\n\n");
-                printMenu();
                 break;
             default: // help
                 break;
@@ -148,6 +152,13 @@ matrix createMatrix(void) {
 
 void printMatrix(matrix* m) {
 
+}
+
+void deleteMatrix(matrix *m){
+    m->next = NULL;
+    free(m->name);
+    free(m->arr);
+    free(m);
 }
 
 
