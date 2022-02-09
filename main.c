@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 
-#define MATRIX_MENU_EXIT_CODE 5
+#define MATRIX_MENU_EXIT_CODE 7
 
 typedef struct _matrix { //node
 	unsigned rows;
@@ -22,11 +22,13 @@ void mainMenu(void);
 void printMenu(void);
 void matrixMenu(void);
 void printMatrixMenu(void);
-matrix createMatrix(void);
+matrix *createMatrix(void);
 void printMatrix(matrix *m);
 void deleteMatrix(matrix *m);
 int readOptions(void);
-//void addMatrix2List(void);
+void addMatrix2List(matrixList *list, matrix *m);
+void printList(matrixList *list);
+void clearMatrixList(matrixList *list);
 
 int main(void) {
 	mainMenu();
@@ -67,10 +69,12 @@ void printMenu(void) {
 void printMatrixMenu(void) {
 	printf("| Matrix Menu |\n");
 	printf("1) Add Matrix\n");
-	printf("2) Delete Matrix\n");
-	printf("3) Print Matrix\n");
-	printf("4) Print Matrix Menu\n");
-	printf("5) Return to Main Menu\n");
+	printf("2) Delete Single Matrix\n");
+	printf("3) Print Single Matrix\n");
+	printf("4) Print All Matrices\n");
+	printf("5) Delete All Matrices\n");
+	printf("6) Print Matrix Menu\n");
+	printf("7) Return to Main Menu\n");
 }
 
 int readOptions() {
@@ -87,22 +91,28 @@ void matrixMenu() {
 	system("cls");
 	printMatrixMenu();
 	int matrixOption = 0;
-	matrix mainMatrix;
+	matrixList mainList = {NULL, NULL};
 	while(matrixOption != MATRIX_MENU_EXIT_CODE){
         matrixOption = readOptions();
         switch (matrixOption) {
             case 1:
-                mainMatrix = createMatrix();
+                addMatrix2List(&mainList, createMatrix());
                 printf("Matrix created successfully \n");
                 break;
             case 2:
-                deleteMatrix(&mainMatrix);
+                //deleteMatrix();
                 printf("Matrix deleted \n");
                 break;
             case 3:
-                printMatrix(&mainMatrix);
+                //printMatrix(&mainMatrix);
                 break;
             case 4:
+                printList(&mainList);
+                break;
+            case 5:
+                clearMatrixList(&mainList);
+                break;
+            case 6:
                 printMatrixMenu();
                 break;
             case MATRIX_MENU_EXIT_CODE:
@@ -122,7 +132,7 @@ void matrixMenu() {
 // return to main menu
 // help
 
-matrix createMatrix(void) {
+matrix *createMatrix(void) {
 	matrix* tmp = (matrix*)malloc(sizeof(matrix));
 	unsigned r, c;
 	char buff[21];
@@ -152,11 +162,11 @@ matrix createMatrix(void) {
 				printf("\n");
 		}
 	}
-	return *tmp;
+	return tmp;
 }
 
 void printMatrix(matrix* m) {
-    printf("Matrix name: %s\n", m->name == NULL ? "(Not set)" : m->name);
+    printf("Matrix name: %c\n", m->name == NULL ? "(Not set)" : m->name);
     printf("Matrix size: %d X %d\n\n", m->rows, m->cols);
     int currentPos = 0;
     while(currentPos < m->rows*m->cols){
@@ -175,15 +185,46 @@ void deleteMatrix(matrix *m){
 }
 
 
-//void addMatrix2List(matrixList) {
-//	if (matrixList == NULL) {
-//		matrixList->head = martix;
-//		matrix->name = 'A';
-//		matrix->next = NULL;
-//		return;
-//	}
-//	matrix* tmp = matrixList->head;
-//	if (temp != NULL) {
-//		t
-//	}
-//}
+void addMatrix2List(matrixList *list, matrix *m) {
+	if (list->head == NULL) {
+		m->name = 'A';
+		m->next = NULL;
+		list->head = m;
+		return;
+	}
+	else{
+        matrix *tmp = list->head;
+        int counter = 66;
+        while(tmp->next != NULL){
+            tmp = tmp->next;
+            counter++;
+        }
+        m->next = NULL;
+        m->name = counter;
+        tmp->next = m;
+	}
+}
+
+void printList(matrixList *list){
+    if(list->head == NULL) printf("No matrices created yet\n");
+    else{
+        matrix *m = list->head;
+        while(m != NULL){
+            printMatrix(m);
+            printf("\n");
+            m = m->next;
+        }
+    }
+}
+
+void clearMatrixList(matrixList *list){
+    matrix *m = list->head;
+    while(list->head != NULL){
+        matrix *tmp = m;
+        list->head = list->head->next;
+        deleteMatrix(tmp);
+    }
+    list->head = NULL;
+    list->next = NULL;
+    printf("Matrices list cleared\n");
+}
